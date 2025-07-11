@@ -1,0 +1,15 @@
+POST http://localhost:3000/barcode/generate HTTP/1.1
+Content-Type: application/json
+
+{
+    "send_date": "11/07/2025", 
+    "DNID": ["2025/07/0255","2025/07/0253","2025/07/0256","2025/07/0257"]
+}
+
+###
+POST http://localhost:3000/barcode/show HTTP/1.1
+Content-Type: application/json
+
+{
+    "code": "d90929f9aaa59e04e427385acd9bb45dd048af87178691da7de980ea9f988749"
+}

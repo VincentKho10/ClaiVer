@@ -1,0 +1,24 @@
+{
+  "name": "ClaiVer",
+  "version": "1.0.0",
+  "description": "verify customer claim",
+  "keywords": [
+    "brand",
+    "claim",
+    "expire"
+  ],
+  "license": "ISC",
+  "author": "PatetoMan",
+  "type": "commonjs",
+  "main": "serve.js",
+  "scripts": {
+    "start": "nodemon serve.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongodb": "^6.17.0",
+    "mongoose": "^8.16.3",
+    "nodemon": "^3.1.10"
+  }
+}
