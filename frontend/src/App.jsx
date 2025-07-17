@@ -7,12 +7,7 @@ import ShowBarcode from "./View/Home/ShowBarcode";
 function App() {
   return (
     <>
-    <Routes>
-      <Route path='/' element={<Home />}>
-        <Route path='generate' element={<GenerateBarcode />}/>
-        <Route path='show' element={<ShowBarcode />}/>
-      </Route>
-    </Routes>
+      <Home />
     </>
   );
 }
