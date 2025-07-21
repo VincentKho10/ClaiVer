@@ -33,8 +33,6 @@ const GenerateBarcode = () => {
       if (found_deliv) {
         // does dnid registered?
         const cDNID = found_deliv.DNID.find((v)=>v==DNID);
-        console.log(found_deliv.DNID)
-        console.log(DNID)
         // if not register
         if (!cDNID) {
           setList({

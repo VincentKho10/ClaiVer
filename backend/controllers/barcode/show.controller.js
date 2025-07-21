@@ -6,7 +6,7 @@ const showController = async (req, res) => {
   const { code } = req.body;
   const data = await barcodeModel.find({ VerfID: code });
 
-  console.log(data)
+  // console.log(data)
   if (data) {
     return res.json({
       status: "success",
