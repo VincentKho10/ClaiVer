@@ -31,7 +31,7 @@ const Home = () => {
               </Routes>
             </div>
             <div className="flex flex-row justify-end h-1/12">
-              <button className="btn btn-primary mr-4 h-full">Submit</button>
+              <button className="btn btn-primary mr-4 h-full">Upload</button>
               <button className="btn btn-secondary h-full">Clear</button>
             </div>
           </div>

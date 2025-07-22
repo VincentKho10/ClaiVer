@@ -3,12 +3,8 @@ import { useState } from "react";
 
 const GenerateBarcode = () => {
   const [list, setList] = useState({
-    "11/07/2025": {
-      DNID: ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0257"],
-    },
-    "12/07/2025": {
-      DNID: ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0277"],
-    },
+    "2025-07-11": ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0257"],
+    "2025-07-12": ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0277"],
   });
 
   const [delivr, setDelivr] = useState({ send_date: "", DNID: "" });
@@ -27,40 +23,51 @@ const GenerateBarcode = () => {
   const handleSubmit = () => {
     let { send_date, DNID } = delivr;
     if (send_date && DNID) {
+      //if found it return list
       const found_deliv = list[send_date];
       console.log(found_deliv&true)
       //date registered already?
       if (found_deliv) {
         // does dnid registered?
-        const cDNID = found_deliv.DNID.find((v)=>v==DNID);
+        const cDNID = found_deliv.find((v)=>v==DNID);
         // if not register
         if (!cDNID) {
           setList({
             ...list,
-            [send_date]: { DNID: [...found_deliv.DNID, DNID] },
+            [send_date]: [...found_deliv, DNID],
           });
         }
       // if date not found initialize it
       } else {
-        setList({ ...list, [send_date]: { DNID: [DNID] } });
+        setList({ ...list, [send_date]: [DNID] });
       }
     } else {
       console.log("send date or dnid should be filled");
     }
   };
 
-  const handleUpdate = (id) => {
-    //console.log(id);
+  const handleUpdate = (send_date,id) => {
+    setDelivr({send_date, DNID: list[send_date][id]})
+    handleDelete(send_date,id)
   };
 
-  const handleDelete = (id) => {
-    console.log(id);
+  const handleDelete = (send_date,idx) => {
+    const isLast = list[send_date].length==1
+    if(isLast){
+      const nList = {...list}
+      delete nList[send_date]
+      setList({...nList})
+    } else {
+      const nlist = {...list}
+      nlist[send_date].splice(idx,1)
+      setList({...nlist})
+    }
   };
 
   const listContentComp = () => {
     const res = [];
     for (let key in list) {
-      const { DNID } = list[key];
+      const DNID = list[key];
       const send_date = key;
       const dnComp = DNID.map((v, i) => {
         return (
@@ -70,7 +77,7 @@ const GenerateBarcode = () => {
               <button
                 className="btn btn-square btn-ghost"
                 name="updateDN"
-                onClick={() => handleUpdate(i)}
+                onClick={() => handleUpdate(send_date,i)}
               >
                 <svg
                   className="size-[1.2em]"
@@ -92,7 +99,7 @@ const GenerateBarcode = () => {
               <button
                 className="btn btn-square btn-ghost"
                 name="deleteDN"
-                onClick={() => handleDelete(i)}
+                onClick={() => handleDelete(send_date,i)}
               >
                 <svg
                   className="size-[1.2em]"
@@ -165,6 +172,7 @@ const GenerateBarcode = () => {
         </button>
       </div>
 
+        Upload Queue
       <ul className="list bg-base-100 rounded-box shadow-md overflow-auto max-h-9/12 min-h-9/12">
         {listContentComp()}
       </ul>
