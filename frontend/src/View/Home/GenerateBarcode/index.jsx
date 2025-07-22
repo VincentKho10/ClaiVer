@@ -54,7 +54,7 @@ const GenerateBarcode = () => {
   };
 
   const handleDelete = (id) => {
-    //console.log(id);
+    console.log(id);
   };
 
   const listContentComp = () => {
