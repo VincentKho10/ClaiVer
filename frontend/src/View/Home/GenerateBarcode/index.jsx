@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 
-const GenerateBarcode = () => {
-  const [list, setList] = useState({
-    "2025-07-11": ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0257"],
-    "2025-07-12": ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0277"],
-  });
-
+const GenerateBarcode = (props) => {
+  const { data } = props;
+  const [list, setList] = useState({});
   const [delivr, setDelivr] = useState({ send_date: "", DNID: "" });
-
+  
+  useEffect(()=>{
+    console.log("rerender")
+    setList(data)
+  },[data])
+  
   const handleChangeField = (e) => {
     const { name, value } = e.target;
     if (name == "send_date") {
@@ -22,45 +24,49 @@ const GenerateBarcode = () => {
 
   const handleSubmit = () => {
     let { send_date, DNID } = delivr;
+    let isSet = false;
     if (send_date && DNID) {
       //if found it return list
       const found_deliv = list[send_date];
-      console.log(found_deliv&true)
+      console.log(found_deliv & true);
       //date registered already?
       if (found_deliv) {
         // does dnid registered?
-        const cDNID = found_deliv.find((v)=>v==DNID);
+        const cDNID = found_deliv.find((v) => v == DNID);
         // if not register
         if (!cDNID) {
           setList({
             ...list,
             [send_date]: [...found_deliv, DNID],
           });
+          isSet = !isSet;
         }
-      // if date not found initialize it
+        // if date not found initialize it
       } else {
         setList({ ...list, [send_date]: [DNID] });
+        isSet = !isSet;
       }
+      if (isSet) setDelivr({ send_date: "", DNID: "" });
     } else {
       console.log("send date or dnid should be filled");
     }
   };
 
-  const handleUpdate = (send_date,id) => {
-    setDelivr({send_date, DNID: list[send_date][id]})
-    handleDelete(send_date,id)
+  const handleUpdate = (send_date, id) => {
+    setDelivr({ send_date, DNID: list[send_date][id] });
+    handleDelete(send_date, id);
   };
 
-  const handleDelete = (send_date,idx) => {
-    const isLast = list[send_date].length==1
-    if(isLast){
-      const nList = {...list}
-      delete nList[send_date]
-      setList({...nList})
+  const handleDelete = (send_date, idx) => {
+    const isLast = list[send_date].length == 1;
+    if (isLast) {
+      const nList = { ...list };
+      delete nList[send_date];
+      setList({ ...nList });
     } else {
-      const nlist = {...list}
-      nlist[send_date].splice(idx,1)
-      setList({...nlist})
+      const nlist = { ...list };
+      nlist[send_date].splice(idx, 1);
+      setList({ ...nlist });
     }
   };
 
@@ -77,7 +83,7 @@ const GenerateBarcode = () => {
               <button
                 className="btn btn-square btn-ghost"
                 name="updateDN"
-                onClick={() => handleUpdate(send_date,i)}
+                onClick={() => handleUpdate(send_date, i)}
               >
                 <svg
                   className="size-[1.2em]"
@@ -99,7 +105,7 @@ const GenerateBarcode = () => {
               <button
                 className="btn btn-square btn-ghost"
                 name="deleteDN"
-                onClick={() => handleDelete(send_date,i)}
+                onClick={() => handleDelete(send_date, i)}
               >
                 <svg
                   className="size-[1.2em]"
@@ -138,9 +144,13 @@ const GenerateBarcode = () => {
     return res;
   };
 
+  const handleUpload = () => {
+    // console.log(selectState);
+  };
+
   return (
     <>
-      <label className="input w-full">
+      <label className="input w-full mb-1">
         <span className="label">Delivery Date</span>
         <input
           type="date"
@@ -172,10 +182,19 @@ const GenerateBarcode = () => {
         </button>
       </div>
 
+      <div className="flex flex-col max-h-9/12 min-h-9/12 pb-1">
         Upload Queue
-      <ul className="list bg-base-100 rounded-box shadow-md overflow-auto max-h-9/12 min-h-9/12">
-        {listContentComp()}
-      </ul>
+        <ul className="list bg-base-100 rounded-box shadow-md overflow-auto">
+          {listContentComp()}
+        </ul>
+      </div>
+
+      <div className="flex flex-row justify-end h-1/12">
+        <button className="btn btn-primary mr-4 h-full" onClick={handleUpload}>
+          Upload
+        </button>
+        <button className="btn btn-secondary h-full">Clear</button>
+      </div>
     </>
   );
 };
