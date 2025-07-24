@@ -2,15 +2,16 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 
 const GenerateBarcode = (props) => {
-  const { data } = props;
+  const { data, DelivHistState, selectedid } = props;
+  const [delivhist, setDelivHist] = DelivHistState;
   const [list, setList] = useState({});
   const [delivr, setDelivr] = useState({ send_date: "", DNID: "" });
-  
-  useEffect(()=>{
-    console.log("rerender")
-    setList(data)
-  },[data])
-  
+
+  useEffect(() => {
+    console.log("rerender");
+    setList(data);
+  }, [data]);
+
   const handleChangeField = (e) => {
     const { name, value } = e.target;
     if (name == "send_date") {
@@ -22,7 +23,7 @@ const GenerateBarcode = (props) => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleAddQueue = () => {
     let { send_date, DNID } = delivr;
     let isSet = false;
     if (send_date && DNID) {
@@ -144,8 +145,19 @@ const GenerateBarcode = (props) => {
     return res;
   };
 
-  const handleUpload = () => {
-    // console.log(selectState);
+  const handleSubmit = () => {
+    let nList = [];
+    // console.log(Object.entries(list))
+    for (let [key, value] of Object.entries(list)) {
+      console.log(nList);
+      nList = [
+        ...nList,
+        { "Delivery Date": key, "DN Count": value.length, data: value },
+      ];
+    }
+    
+    const res = [...delivhist, ...nList]
+    setDelivHist(res);
   };
 
   return (
@@ -176,9 +188,9 @@ const GenerateBarcode = (props) => {
         <button
           className="btn btn-primary"
           name="submit_delivr"
-          onClick={() => handleSubmit()}
+          onClick={() => handleAddQueue()}
         >
-          Submit
+          Add
         </button>
       </div>
 
@@ -190,8 +202,8 @@ const GenerateBarcode = (props) => {
       </div>
 
       <div className="flex flex-row justify-end h-1/12">
-        <button className="btn btn-primary mr-4 h-full" onClick={handleUpload}>
-          Upload
+        <button className="btn btn-primary mr-4 h-full" onClick={handleSubmit}>
+          Submit
         </button>
         <button className="btn btn-secondary h-full">Clear</button>
       </div>

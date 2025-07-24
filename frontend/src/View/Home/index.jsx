@@ -3,8 +3,7 @@ import { Link, Outlet, Route, Routes } from "react-router-dom";
 import GenerateBarcode from "./GenerateBarcode";
 import ShowBarcode from "./ShowBarcode";
 
-let selectedCb = -1;
-
+let isSelectAll = false;
 const Home = () => {
   const [delivhist, setDelivHist] = useState([
     {
@@ -22,13 +21,18 @@ const Home = () => {
   const [selectState, setSelectState] = useState({});
 
   const selectHandle = (id) => {
-    if (selectedCb == id) {
-      selectedCb = -1;
-      setSelectState({});
-    } else {
-      selectedCb = id;
-      setSelectState(delivhist[id]);
+    const dd = delivhist[id]["Delivery Date"];
+    const dnid = delivhist[id].data;
+
+    //dd avail remove
+    const ssdd = selectState[dd];
+    if (ssdd) {
+      delete selectState[dd];
+      setSelectState({ ...selectState });
+      return;
     }
+    //dd not avail add
+    setSelectState({ ...selectState, [dd]: dnid });
   };
 
   const tbStateHeader = () => {
@@ -52,13 +56,16 @@ const Home = () => {
     return (
       <tbody>
         {delivhist.map((v, i) => {
+          const dhdd = delivhist[i]["Delivery Date"];
+          // console.log(selectState[dhdd]&true)
+          // console.log(selectState)
           return (
             <tr>
               <th>
                 <input
                   type="checkbox"
                   className="checkbox"
-                  checked={selectedCb == i}
+                  checked={selectState[dhdd]}
                   onClick={() => {
                     selectHandle(i);
                   }}
@@ -103,42 +110,23 @@ const Home = () => {
               <Routes>
                 <Route
                   index
-                  element={
-                    <GenerateBarcode
-                      data={
-                        selectState["Delivery Date"]
-                          ? {
-                              [selectState["Delivery Date"]]:
-                                selectState["data"],
-                            }
-                          : {}
-                      }
-                    />
-                  }
+                  element={<GenerateBarcode data={selectState} DelivHistState={[delivhist, setDelivHist]} />}
                 />
                 <Route
                   path="show"
-                  element={
-                    <ShowBarcode
-                      data={
-                        selectState["Delivery Date"]
-                          ? {
-                              [selectState["Delivery Date"]]:
-                                selectState["data"],
-                            }
-                          : {}
-                      }
-                    />
-                  }
+                  element={<ShowBarcode data={selectState} DelivHistState={[delivhist, setDelivHist]} />}
                 />
               </Routes>
             </div>
           </div>
-          <div className="overflow-auto flex-1/2 ml-1 h-full w-full">
-            <table className="table table-xs table-pin-rows table-pin-cols table-auto">
-              {tbStateHeader()}
-              {tbStateContent()}
-            </table>
+          <div className="flex flex-col flex-1/2 h-full w-full">
+            <div className="overflow-auto flex-1/2 ml-1 h-full w-full">
+              <table className="table table-xs table-pin-rows table-pin-cols table-auto">
+                {tbStateHeader()}
+                {tbStateContent()}
+              </table>
+            </div>
+            <button className="btn btn-primary w-fit self-end">Upload</button>
           </div>
         </div>
       </div>
