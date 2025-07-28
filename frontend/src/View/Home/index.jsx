@@ -32,7 +32,7 @@ const Home = () => {
       return;
     }
     //dd not avail add
-    setSelectState({ ...selectState, [dd]: dnid });
+    setSelectState({ ...selectState, [dd]: {dnid, id} });
   };
 
   const tbStateHeader = () => {

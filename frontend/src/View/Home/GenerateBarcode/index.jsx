@@ -4,11 +4,11 @@ import { useState } from "react";
 const GenerateBarcode = (props) => {
   const { data, DelivHistState, selectedid } = props;
   const [delivhist, setDelivHist] = DelivHistState;
-  const [list, setList] = useState({});
+  const [list, setList] = useState({"":{dnid:[], id:-1}});
   const [delivr, setDelivr] = useState({ send_date: "", DNID: "" });
 
   useEffect(() => {
-    console.log("rerender");
+    console.log(data);
     setList(data);
   }, [data]);
 
@@ -28,20 +28,20 @@ const GenerateBarcode = (props) => {
     let isSet = false;
     if (send_date && DNID) {
       //if found it return list
-      const found_deliv = list[send_date];
-      console.log(found_deliv & true);
+      const found_deliv = list;
       //date registered already?
       if (found_deliv) {
+        console.log(found_deliv)
         // does dnid registered?
-        const cDNID = found_deliv.find((v) => v == DNID);
-        // if not register
-        if (!cDNID) {
-          setList({
-            ...list,
-            [send_date]: [...found_deliv, DNID],
-          });
-          isSet = !isSet;
-        }
+        // const cDNID = found_deliv.find((v) => v == DNID);
+        // // if not register
+        // if (!cDNID) {
+        //   setList({
+        //     ...list,
+        //     [send_date]: [...found_deliv, DNID],
+        //   });
+        //   isSet = !isSet;
+        // }
         // if date not found initialize it
       } else {
         setList({ ...list, [send_date]: [DNID] });
@@ -54,7 +54,7 @@ const GenerateBarcode = (props) => {
   };
 
   const handleUpdate = (send_date, id) => {
-    setDelivr({ send_date, DNID: list[send_date][id] });
+    setDelivr({ send_date, DNID: list[send_date]["dnid"][id] });
     handleDelete(send_date, id);
   };
 
@@ -66,7 +66,7 @@ const GenerateBarcode = (props) => {
       setList({ ...nList });
     } else {
       const nlist = { ...list };
-      nlist[send_date].splice(idx, 1);
+      nlist[send_date].dnid.splice(idx, 1);
       setList({ ...nlist });
     }
   };
@@ -74,7 +74,7 @@ const GenerateBarcode = (props) => {
   const listContentComp = () => {
     const res = [];
     for (let key in list) {
-      const DNID = list[key];
+      const DNID = list[key].dnid;
       const send_date = key;
       const dnComp = DNID.map((v, i) => {
         return (
@@ -146,18 +146,20 @@ const GenerateBarcode = (props) => {
   };
 
   const handleSubmit = () => {
-    let nList = [];
+    let nList = delivhist;
+
     // console.log(Object.entries(list))
     for (let [key, value] of Object.entries(list)) {
-      console.log(nList);
-      nList = [
-        ...nList,
-        { "Delivery Date": key, "DN Count": value.length, data: value },
-      ];
+      // const isFound =
+      nList[value.id] = {
+        "Delivery Date": key,
+        "DN Count": value.dnid.length,
+        data: value.dnid,
+      };
     }
-    
-    const res = [...delivhist, ...nList]
-    setDelivHist(res);
+
+    // const res = [...nList]
+    setDelivHist([...nList]);
   };
 
   return (
