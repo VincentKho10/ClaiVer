@@ -25,14 +25,14 @@ const Home = () => {
     const dnid = delivhist[id].data;
 
     //dd avail remove
-    const ssdd = selectState[dd];
+    const ssdd = selectState[id];
     if (ssdd) {
-      delete selectState[dd];
+      delete selectState[id];
       setSelectState({ ...selectState });
       return;
     }
     //dd not avail add
-    setSelectState({ ...selectState, [dd]: dnid });
+    setSelectState({ ...selectState, [id]:{[dd]: dnid} });
   };
 
   const tbStateHeader = () => {

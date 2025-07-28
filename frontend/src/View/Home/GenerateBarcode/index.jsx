@@ -5,11 +5,11 @@ const GenerateBarcode = (props) => {
   const { data, DelivHistState, selectedid } = props;
   const [delivhist, setDelivHist] = DelivHistState;
   const [list, setList] = useState({});
-  const [delivr, setDelivr] = useState({ send_date: "", DNID: "" });
+  const [delivr, setDelivr] = useState({ listkey:-1, idx:-1, send_date: "", DNID: "" });
 
   useEffect(() => {
     console.log("rerender");
-    setList(data);
+    setList({...data})
   }, [data]);
 
   const handleChangeField = (e) => {
@@ -24,58 +24,74 @@ const GenerateBarcode = (props) => {
   };
 
   const handleAddQueue = () => {
-    let { send_date, DNID } = delivr;
+    let { listkey, idx, send_date, DNID } = delivr;
     let isSet = false;
-    if (send_date && DNID) {
+    console.log(listkey && idx)
+    if((listkey && idx)==-1){
+      console.log("create")
+      return
+    }
+    else if (send_date && DNID) {
       //if found it return list
-      const found_deliv = list[send_date];
-      console.log(found_deliv & true);
+      const found_deliv = list[listkey][send_date];
       //date registered already?
       if (found_deliv) {
         // does dnid registered?
-        const cDNID = found_deliv.find((v) => v == DNID);
+        let cDNID = found_deliv[idx];
         // if not register
         if (!cDNID) {
           setList({
             ...list,
-            [send_date]: [...found_deliv, DNID],
+            [listkey]: {[send_date]: [...found_deliv, DNID]},
           });
-          isSet = !isSet;
+        }else{
+          console.log(idx)
+          const temp = list
+          temp[listkey][send_date][idx] = DNID
+          // console.log(temp)
+          setList({...temp})
         }
+        isSet = !isSet;
         // if date not found initialize it
       } else {
-        setList({ ...list, [send_date]: [DNID] });
+        setList({ ...list, [listkey]:{[send_date]: [DNID] }});
         isSet = !isSet;
       }
-      if (isSet) setDelivr({ send_date: "", DNID: "" });
+      if (isSet) setDelivr({ ...delivr, idx:-1, send_date: "", DNID: "" });
     } else {
       console.log("send date or dnid should be filled");
     }
   };
 
-  const handleUpdate = (send_date, id) => {
-    setDelivr({ send_date, DNID: list[send_date][id] });
-    handleDelete(send_date, id);
+  const handleUpdate = (key, id) => {
+    const send_date = Object.entries(list[key])[0][0]
+    const DNID = Object.entries(list[key])[0][1]
+    console.log(send_date)
+    setDelivr({ listkey:key, idx: id, send_date, DNID: DNID[id] });
   };
 
-  const handleDelete = (send_date, idx) => {
-    const isLast = list[send_date].length == 1;
+  const handleDelete = (key, idx) => {
+    const send_date = Object.entries(list[key])[0][0]
+    // console.log(send_date)
+    const isLast = list[key][send_date].length == 1;
     if (isLast) {
-      const nList = { ...list };
-      delete nList[send_date];
-      setList({ ...nList });
+      delete delivhist[delivr.listkey]
+      // delete delivhist[key]
+      console.log(delivr.listkey)
+      // setDelivHist({...delivhist})
     } else {
-      const nlist = { ...list };
-      nlist[send_date].splice(idx, 1);
-      setList({ ...nlist });
+      const nList = { ...list };
+      nList[key][send_date].splice(idx, 1);
+      setList({ ...nList });
     }
+    console.log(delivhist[key])
   };
 
   const listContentComp = () => {
     const res = [];
     for (let key in list) {
-      const DNID = list[key];
-      const send_date = key;
+      const send_date = Object.entries(list[key])[0][0];
+      const DNID = Object.entries(list[key])[0][1];
       const dnComp = DNID.map((v, i) => {
         return (
           <div className="flex flex-row justify-between">
@@ -84,7 +100,7 @@ const GenerateBarcode = (props) => {
               <button
                 className="btn btn-square btn-ghost"
                 name="updateDN"
-                onClick={() => handleUpdate(send_date, i)}
+                onClick={() => handleUpdate(key, i)}
               >
                 <svg
                   className="size-[1.2em]"
@@ -106,7 +122,7 @@ const GenerateBarcode = (props) => {
               <button
                 className="btn btn-square btn-ghost"
                 name="deleteDN"
-                onClick={() => handleDelete(send_date, i)}
+                onClick={() => handleDelete(key, i)}
               >
                 <svg
                   className="size-[1.2em]"
@@ -149,15 +165,17 @@ const GenerateBarcode = (props) => {
     let nList = [];
     // console.log(Object.entries(list))
     for (let [key, value] of Object.entries(list)) {
-      console.log(nList);
+      const [k,v] = Object.entries(value)[0]
+      
       nList = [
         ...nList,
-        { "Delivery Date": key, "DN Count": value.length, data: value },
+        { "Delivery Date": k, "DN Count": v.length, data: v },
       ];
     }
-    
-    const res = [...delivhist, ...nList]
-    setDelivHist(res);
+    console.log(nList)
+
+    // const res = [...delivhist, ...nList]
+    setDelivHist(nList);
   };
 
   return (
