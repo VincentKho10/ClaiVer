@@ -5,34 +5,34 @@ import ShowBarcode from "./ShowBarcode";
 
 let isSelectAll = false;
 const Home = () => {
-  const [delivhist, setDelivHist] = useState([
-    {
+  const [delivhist, setDelivHist] = useState({
+    "2025-07-11": {
       "Delivery Date": "2025-07-11",
       "DN Count": 4,
       data: ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0257"],
     },
-    {
+    "2025-07-12": {
       "Delivery Date": "2025-07-12",
       "DN Count": 4,
       data: ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0277"],
     },
-  ]);
+  });
 
   const [selectState, setSelectState] = useState({});
 
   const selectHandle = (id) => {
-    const dd = delivhist[id]["Delivery Date"];
-    const dnid = delivhist[id].data;
+    const dd = delivhist[id];
 
     //dd avail remove
-    const ssdd = selectState[dd];
+    const ssdd = selectState[id];
+    console.log(ssdd)
     if (ssdd) {
-      delete selectState[dd];
+      delete selectState[id];
       setSelectState({ ...selectState });
       return;
     }
-    //dd not avail add
-    setSelectState({ ...selectState, [dd]: {dnid, id} });
+    // //dd not avail add
+    setSelectState({ ...selectState, [id]: dd });
   };
 
   const tbStateHeader = () => {
@@ -40,7 +40,7 @@ const Home = () => {
       <thead>
         <tr>
           <th></th>
-          {Object.keys(delivhist[0]).map((v) => {
+          {Object.keys(Object.entries(delivhist)[1][1]).map((v) => {
             return (
               <>
                 <td>{v == "data" ? "" : v}</td>
@@ -53,37 +53,41 @@ const Home = () => {
   };
 
   const tbStateContent = () => {
-    return (
-      <tbody>
-        {delivhist.map((v, i) => {
-          const dhdd = delivhist[i]["Delivery Date"];
-          // console.log(selectState[dhdd]&true)
-          // console.log(selectState)
-          return (
-            <tr>
-              <th>
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  checked={selectState[dhdd]}
-                  onClick={() => {
-                    selectHandle(i);
-                  }}
-                />
-              </th>
-              {(() => {
-                let res = [];
-                for (const key in v) {
-                  if (key == "data") continue;
-                  res.push(<td>{v[key]}</td>);
-                }
-                return res;
-              })()}
-            </tr>
-          );
-        })}
-      </tbody>
-    );
+
+    const delivhistarr = () => {
+      const delivhistmap = Object.entries(delivhist);
+      const res = [];
+      for (const [key, value] of delivhistmap) {
+        const dhdd = delivhist[key]["Delivery Date"];
+        console.log(dhdd);
+        // console.log(selectState)
+        res.push(
+          <tr>
+            <th>
+              <input
+                type="checkbox"
+                className="checkbox"
+                checked={selectState[dhdd]}
+                onClick={() => {
+                  selectHandle(key);
+                }}
+              />
+            </th>
+            {(() => {
+              let res1 = [];
+              for (const key1 in value) {
+                if (key1 == "data") continue;
+                res1.push(<td>{value[key1]}</td>);
+              }
+              return res1;
+            })()}
+          </tr>
+        );
+      }
+      return res;
+    };
+
+    return <tbody>{delivhistarr()}</tbody>;
   };
 
   return (
@@ -110,11 +114,21 @@ const Home = () => {
               <Routes>
                 <Route
                   index
-                  element={<GenerateBarcode data={selectState} DelivHistState={[delivhist, setDelivHist]} />}
+                  element={
+                    <GenerateBarcode
+                      data={selectState}
+                      DelivHistState={[delivhist, setDelivHist]}
+                    />
+                  }
                 />
                 <Route
                   path="show"
-                  element={<ShowBarcode data={selectState} DelivHistState={[delivhist, setDelivHist]} />}
+                  element={
+                    <ShowBarcode
+                      data={selectState}
+                      DelivHistState={[delivhist, setDelivHist]}
+                    />
+                  }
                 />
               </Routes>
             </div>

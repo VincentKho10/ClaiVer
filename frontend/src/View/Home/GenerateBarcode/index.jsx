@@ -2,14 +2,22 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 
 const GenerateBarcode = (props) => {
-  const { data, DelivHistState, selectedid } = props;
+  const { data, DelivHistState } = props;
   const [delivhist, setDelivHist] = DelivHistState;
-  const [list, setList] = useState({"":{dnid:[], id:-1}});
+  const [list, setList] = useState({
+    "2025-07-11": {
+      "Delivery Date": "2025-07-11",
+      "DN Count": 4,
+      data: ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0257"],
+    },
+  });
   const [delivr, setDelivr] = useState({ send_date: "", DNID: "" });
 
   useEffect(() => {
-    console.log(data);
-    setList(data);
+    for ( let key in data){
+
+      setList({ ...list, [key]: {...data[key], data:Array.from(new Set([...data[key]["data"], ...list[key]["data"]]))} });
+    }
   }, [data]);
 
   const handleChangeField = (e) => {
@@ -27,11 +35,19 @@ const GenerateBarcode = (props) => {
     let { send_date, DNID } = delivr;
     let isSet = false;
     if (send_date && DNID) {
+      const find_deliv = list[send_date];
+      if (!find_deliv) {
+        console.log(send_date);
+        console.log("empty list");
+        setList({ [send_date]: { data: [DNID] } });
+        isSet = !isSet;
+        return;
+      }
       //if found it return list
-      const found_deliv = list;
+      const found_deliv = find_deliv.data.find((v) => v == DNID);
       //date registered already?
       if (found_deliv) {
-        console.log(found_deliv)
+        console.log(found_deliv);
         // does dnid registered?
         // const cDNID = found_deliv.find((v) => v == DNID);
         // // if not register
@@ -44,7 +60,10 @@ const GenerateBarcode = (props) => {
         // }
         // if date not found initialize it
       } else {
-        setList({ ...list, [send_date]: [DNID] });
+        setList({
+          ...list,
+          [send_date]: { ...find_deliv, data: [...find_deliv.data, DNID] },
+        });
         isSet = !isSet;
       }
       if (isSet) setDelivr({ send_date: "", DNID: "" });
@@ -54,7 +73,7 @@ const GenerateBarcode = (props) => {
   };
 
   const handleUpdate = (send_date, id) => {
-    setDelivr({ send_date, DNID: list[send_date]["dnid"][id] });
+    setDelivr({ send_date, DNID: list[send_date]["data"][id] });
     handleDelete(send_date, id);
   };
 
@@ -66,7 +85,7 @@ const GenerateBarcode = (props) => {
       setList({ ...nList });
     } else {
       const nlist = { ...list };
-      nlist[send_date].dnid.splice(idx, 1);
+      nlist[send_date].data.splice(idx, 1);
       setList({ ...nlist });
     }
   };
@@ -74,7 +93,7 @@ const GenerateBarcode = (props) => {
   const listContentComp = () => {
     const res = [];
     for (let key in list) {
-      const DNID = list[key].dnid;
+      const DNID = list[key].data;
       const send_date = key;
       const dnComp = DNID.map((v, i) => {
         return (
