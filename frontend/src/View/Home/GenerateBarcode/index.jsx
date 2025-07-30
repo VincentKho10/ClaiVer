@@ -2,23 +2,22 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 
 const GenerateBarcode = (props) => {
-  const { data, DelivHistState } = props;
+  const { SelectState, DelivHistState } = props;
+  const [selectstate, setSelectState] = SelectState;
   const [delivhist, setDelivHist] = DelivHistState;
+  const [isUpdate, setIsUpdate] = useState(-1);
   const [list, setList] = useState({
-    "2025-07-11": {
-      "Delivery Date": "2025-07-11",
-      "DN Count": 4,
-      data: ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0257"],
-    },
+    // "2025-07-11": {
+    //   "Delivery Date": "2025-07-11",
+    //   "DN Count": 4,
+    //   data: ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0257"],
+    // },
   });
   const [delivr, setDelivr] = useState({ send_date: "", DNID: "" });
 
   useEffect(() => {
-    for ( let key in data){
-
-      setList({ ...list, [key]: {...data[key], data:Array.from(new Set([...data[key]["data"], ...list[key]["data"]]))} });
-    }
-  }, [data]);
+    setList({ ...selectstate });
+  }, [selectstate]);
 
   const handleChangeField = (e) => {
     const { name, value } = e.target;
@@ -31,54 +30,40 @@ const GenerateBarcode = (props) => {
     }
   };
 
-  const handleAddQueue = () => {
+  const handleQueueChange = () => {
     let { send_date, DNID } = delivr;
-    let isSet = false;
-    if (send_date && DNID) {
-      const find_deliv = list[send_date];
-      if (!find_deliv) {
-        console.log(send_date);
-        console.log("empty list");
-        setList({ [send_date]: { data: [DNID] } });
-        isSet = !isSet;
-        return;
+    if (isUpdate >= 0) {
+      let n_arr = selectstate[send_date].data;
+      if(DNID == n_arr[isUpdate]){
+        n_arr[isUpdate] = DNID;
+        n_arr = Array.from(new Set(n_arr));
+        let nvalue = {
+          [send_date]: {
+            ...selectstate[send_date],
+            count: n_arr.length,
+            data: [...n_arr],
+          },
+        };
+        //reset selected and deliv then list follow selected
+        setSelectState({ ...selectstate, ...nvalue });
+        setDelivHist({ ...delivhist, ...nvalue });
+        //reseting after update
+        setIsUpdate(-1);
       }
-      //if found it return list
-      const found_deliv = find_deliv.data.find((v) => v == DNID);
-      //date registered already?
-      if (found_deliv) {
-        console.log(found_deliv);
-        // does dnid registered?
-        // const cDNID = found_deliv.find((v) => v == DNID);
-        // // if not register
-        // if (!cDNID) {
-        //   setList({
-        //     ...list,
-        //     [send_date]: [...found_deliv, DNID],
-        //   });
-        //   isSet = !isSet;
-        // }
-        // if date not found initialize it
-      } else {
-        setList({
-          ...list,
-          [send_date]: { ...find_deliv, data: [...find_deliv.data, DNID] },
-        });
-        isSet = !isSet;
-      }
-      if (isSet) setDelivr({ send_date: "", DNID: "" });
     } else {
-      console.log("send date or dnid should be filled");
+      setList({...list})
     }
+    setDelivr({ send_date: "", DNID: "" });
   };
 
   const handleUpdate = (send_date, id) => {
-    setDelivr({ send_date, DNID: list[send_date]["data"][id] });
-    handleDelete(send_date, id);
+    setDelivr({ send_date, DNID: list[send_date].data[id] });
+    setIsUpdate(id);
+    // handleDelete(send_date, id);
   };
 
   const handleDelete = (send_date, idx) => {
-    const isLast = list[send_date].length == 1;
+    const isLast = list[send_date].data.length <= 1;
     if (isLast) {
       const nList = { ...list };
       delete nList[send_date];
@@ -92,8 +77,8 @@ const GenerateBarcode = (props) => {
 
   const listContentComp = () => {
     const res = [];
-    for (let key in list) {
-      const DNID = list[key].data;
+    for (let key in selectstate) {
+      const DNID = selectstate[key].data;
       const send_date = key;
       const dnComp = DNID.map((v, i) => {
         return (
@@ -168,17 +153,20 @@ const GenerateBarcode = (props) => {
     let nList = delivhist;
 
     // console.log(Object.entries(list))
-    for (let [key, value] of Object.entries(list)) {
-      // const isFound =
-      nList[value.id] = {
-        "Delivery Date": key,
-        "DN Count": value.dnid.length,
-        data: value.dnid,
-      };
-    }
+    // for (let [key, value] of Object.entries(list)) {
+    //   // const isFound =
+    //   nList[value.id] = {
+    //     "Delivery Date": key,
+    //     "DN Count": value.dnid.length,
+    //     data: value.dnid,
+    //   };
+    // }
+
+    // mergeDict(list, nList);
+    console.log(nList);
 
     // const res = [...nList]
-    setDelivHist([...nList]);
+    // setDelivHist([...nList]);
   };
 
   return (
@@ -209,9 +197,9 @@ const GenerateBarcode = (props) => {
         <button
           className="btn btn-primary"
           name="submit_delivr"
-          onClick={() => handleAddQueue()}
+          onClick={() => handleQueueChange()}
         >
-          Add
+          {isUpdate > -1 ? "Update" : "Add"}
         </button>
       </div>
 
@@ -221,13 +209,19 @@ const GenerateBarcode = (props) => {
           {listContentComp()}
         </ul>
       </div>
-
-      <div className="flex flex-row justify-end h-1/12">
-        <button className="btn btn-primary mr-4 h-full" onClick={handleSubmit}>
-          Submit
-        </button>
-        <button className="btn btn-secondary h-full">Clear</button>
-      </div>
+      {isUpdate == -1 ? (
+        <div className="flex flex-row justify-end h-1/12">
+          <button
+            className="btn btn-primary mr-4 h-full"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+          <button className="btn btn-secondary h-full">Clear</button>
+        </div>
+      ) : (
+        []
+      )}
     </>
   );
 };

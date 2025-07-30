@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Outlet, Route, Routes } from "react-router-dom";
 import GenerateBarcode from "./GenerateBarcode";
 import ShowBarcode from "./ShowBarcode";
@@ -7,32 +7,29 @@ let isSelectAll = false;
 const Home = () => {
   const [delivhist, setDelivHist] = useState({
     "2025-07-11": {
-      "Delivery Date": "2025-07-11",
-      "DN Count": 4,
+      count: 4,
       data: ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0257"],
     },
     "2025-07-12": {
-      "Delivery Date": "2025-07-12",
-      "DN Count": 4,
+      count: 4,
       data: ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0277"],
     },
   });
 
-  const [selectState, setSelectState] = useState({});
+  const [selectstate, setSelectState] = useState({});
 
   const selectHandle = (id) => {
     const dd = delivhist[id];
-
+    
     //dd avail remove
-    const ssdd = selectState[id];
-    console.log(ssdd)
+    const ssdd = selectstate[id];
     if (ssdd) {
-      delete selectState[id];
-      setSelectState({ ...selectState });
+      delete selectstate[id];
+      setSelectState({ ...selectstate });
       return;
     }
     // //dd not avail add
-    setSelectState({ ...selectState, [id]: dd });
+    setSelectState({ ...selectstate, [id]: dd });
   };
 
   const tbStateHeader = () => {
@@ -40,13 +37,8 @@ const Home = () => {
       <thead>
         <tr>
           <th></th>
-          {Object.keys(Object.entries(delivhist)[1][1]).map((v) => {
-            return (
-              <>
-                <td>{v == "data" ? "" : v}</td>
-              </>
-            );
-          })}
+          <td>Delivery Date</td>
+          <td>Delivery Count</td>
         </tr>
       </thead>
     );
@@ -58,29 +50,21 @@ const Home = () => {
       const delivhistmap = Object.entries(delivhist);
       const res = [];
       for (const [key, value] of delivhistmap) {
-        const dhdd = delivhist[key]["Delivery Date"];
-        console.log(dhdd);
-        // console.log(selectState)
+        // console.log(selectstate)
         res.push(
           <tr>
             <th>
               <input
                 type="checkbox"
                 className="checkbox"
-                checked={selectState[dhdd]}
+                checked={selectstate[key]?true:false}
                 onClick={() => {
                   selectHandle(key);
                 }}
               />
             </th>
-            {(() => {
-              let res1 = [];
-              for (const key1 in value) {
-                if (key1 == "data") continue;
-                res1.push(<td>{value[key1]}</td>);
-              }
-              return res1;
-            })()}
+            <td>{key}</td>
+            <td>{value.count}</td>
           </tr>
         );
       }
@@ -116,7 +100,7 @@ const Home = () => {
                   index
                   element={
                     <GenerateBarcode
-                      data={selectState}
+                      SelectState={[selectstate, setSelectState]}
                       DelivHistState={[delivhist, setDelivHist]}
                     />
                   }
@@ -125,7 +109,7 @@ const Home = () => {
                   path="show"
                   element={
                     <ShowBarcode
-                      data={selectState}
+                      SelectState={[selectstate, setSelectState]}
                       DelivHistState={[delivhist, setDelivHist]}
                     />
                   }
