@@ -33,25 +33,39 @@ const GenerateBarcode = (props) => {
   const handleQueueChange = () => {
     let { send_date, DNID } = delivr;
     if (isUpdate >= 0) {
+      setList({...selectstate})
       let n_arr = selectstate[send_date].data;
-      if(DNID == n_arr[isUpdate]){
+      const isFound = n_arr.find((v) => DNID == v);
+      if (!isFound) {
         n_arr[isUpdate] = DNID;
         n_arr = Array.from(new Set(n_arr));
-        let nvalue = {
-          [send_date]: {
-            ...selectstate[send_date],
-            count: n_arr.length,
-            data: [...n_arr],
-          },
-        };
-        //reset selected and deliv then list follow selected
-        setSelectState({ ...selectstate, ...nvalue });
-        setDelivHist({ ...delivhist, ...nvalue });
         //reseting after update
         setIsUpdate(-1);
+      } else {
+        return;
       }
     } else {
-      setList({...list})
+      setSelectState({})
+      let n_arr = list[send_date];
+      let nvalue = {}
+      console.log(n_arr)
+      if(n_arr){
+        nvalue = {
+          ...list,
+          [send_date]: {
+            count: n_arr.data.length,
+            data: Array.from(new Set([...n_arr.data, DNID])),
+          },
+        };
+      }else{
+        nvalue = {
+          [send_date]: {
+            count: 1,
+            data: [DNID],
+          },
+        };
+      }
+      setList({ ...list, ...nvalue });
     }
     setDelivr({ send_date: "", DNID: "" });
   };
@@ -63,22 +77,35 @@ const GenerateBarcode = (props) => {
   };
 
   const handleDelete = (send_date, idx) => {
-    const isLast = list[send_date].data.length <= 1;
-    if (isLast) {
-      const nList = { ...list };
-      delete nList[send_date];
-      setList({ ...nList });
-    } else {
-      const nlist = { ...list };
-      nlist[send_date].data.splice(idx, 1);
-      setList({ ...nlist });
+    if (!list[send_date]) {
+      // setList({...list})
+      console.log(selectstate);
+      // setDelivHist({ ...delivhist});
+      return;
     }
+    const isLast = list[send_date].data.length <= 1;
+    let nList = { ...list };
+    if (isLast) {
+      const { [send_date]: deleted, ...nDelivHist } = delivhist;
+      setDelivHist({ ...nDelivHist });
+      console.log(selectstate);
+      delete selectstate[send_date];
+      setSelectState({ ...selectstate });
+    } else {
+      nList[send_date].data.splice(idx, 1);
+      nList[send_date].count = nList[send_date].data.length;
+      setList({ ...nList });
+      //reset selected and deliv then list follow selected
+      setSelectState({ ...selectstate });
+      setDelivHist({ ...delivhist });
+    }
+    console.log(list);
   };
 
   const listContentComp = () => {
     const res = [];
-    for (let key in selectstate) {
-      const DNID = selectstate[key].data;
+    for (let key in isUpdate==-1?list:selectstate) {
+      const DNID = isUpdate==-1?list[key].data:selectstate[key].data;
       const send_date = key;
       const dnComp = DNID.map((v, i) => {
         return (
@@ -178,6 +205,7 @@ const GenerateBarcode = (props) => {
           value={delivr.send_date}
           name="send_date"
           onChange={handleChangeField}
+          disabled={isUpdate==-1?false:true}
         />
       </label>
 
