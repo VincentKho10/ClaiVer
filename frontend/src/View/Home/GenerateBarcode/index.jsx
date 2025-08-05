@@ -16,7 +16,7 @@ const GenerateBarcode = (props) => {
   const [delivr, setDelivr] = useState({ send_date: "", DNID: "" });
 
   useEffect(() => {
-    setIsUpdate(selectstate=={}?)
+    setIsUpdate(selectstate=={}?-1:-2)
     setList({ ...selectstate });
   }, [selectstate]);
 
