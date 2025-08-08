@@ -5,9 +5,9 @@ const DrawerComponent = (props) => {
   console.log(isOpen)
 
   return (
-    <div className={"drawer "+(isOpen?"lg:drawer-open w-2/12 mr-2":"lg:drawer-close w-0")}>
+    <div className={"flex flex-row drawer "+(isOpen?"lg:drawer-open":"lg:drawer-close")}>
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-side">
+      <div className={"drawer-side"}>
         <label
           htmlFor="my-drawer-2"
           aria-label="close sidebar"

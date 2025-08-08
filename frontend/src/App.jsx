@@ -3,11 +3,12 @@ import "./App.css";
 import Home from "./View/Home";
 import GenerateBarcode from "./View/Home/GenerateBarcode";
 import ShowBarcode from "./View/Home/ShowBarcode";
+import { useState } from "react";
 
 function App() {
   return (
     <>
-      <Home />
+      <Home/>
     </>
   );
 }
