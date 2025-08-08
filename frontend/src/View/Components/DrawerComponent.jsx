@@ -5,7 +5,7 @@ const DrawerComponent = (props) => {
   console.log(isOpen)
 
   return (
-    <div className={"drawer lg:drawer-"+(isOpen?"open w-2/12 mr-2":"close w-0")}>
+    <div className={"drawer "+(isOpen?"lg:drawer-open w-2/12 mr-2":"lg:drawer-close w-0")}>
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-side">
         <label

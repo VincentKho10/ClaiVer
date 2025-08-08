@@ -6,7 +6,7 @@ import DrawerComponent from "../Components/DrawerComponent";
 import NavBarComponent from "../Components/NavBarComponent";
 
 const Home = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   return (
     <div className="flex flex-row">

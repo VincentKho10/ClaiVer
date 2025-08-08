@@ -4,7 +4,9 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-createRoot(document.getElementById("root")).render(
+const root = document.getElementById("root")
+root.className = "h-full"
+createRoot(root).render(
   <StrictMode>
     <BrowserRouter>
       <App />
