@@ -9,36 +9,28 @@ import TableComponent from "../Components/TableComponent";
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const HomeContentSection = () => {
+    return (
+      <div className={"p-8 h-11/12"}>
+        <TableComponent />
+      </div>
+    );
+  };
+
   return (
     <div className="flex flex-row h-full">
       <div className={"w-auto flex"}>
-        <DrawerComponent isOpen={isOpen}/>
+        <DrawerComponent isOpen={isOpen} />
       </div>
-      <div className="flex flex-col w-full h-full bg-red-500">
+      <div className="flex flex-col w-full h-full">
         <div className="h-1/12">
           <NavBarComponent
             title={"Claiver"}
             menuCallb={() => setIsOpen(!isOpen)}
           />
         </div>
-        <div className={" p-8 justify-center items-center h-11/12"}>
-          <div
-            className={
-              "flex flex-row h-1/12 w-full items-center justify-between"
-            }
-          >
-            <div className="pl-2">
-              <div className="btn btn-success mr-2">Create</div>
-            </div>
-            <div className="">
-              <div className="btn btn-success mr-2">Submit</div>
-              <div className="btn btn-error mr-2">Delete</div>
-            </div>
-          </div>
-          <div className="flex flex-col h-10/12 w-full">
-            <TableComponent />
-          </div>
-        </div>
+
+        <HomeContentSection />
       </div>
     </div>
   );

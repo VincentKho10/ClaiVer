@@ -1,5 +1,6 @@
 import React from "react";
 
+let isSelected = [];
 const TableComponent = (props) => {
   const datas = [
     {
@@ -123,67 +124,123 @@ const TableComponent = (props) => {
       skills: ["Supply Chain", "Logistics", "Lean Six Sigma"],
     },
   ];
-  
+  const keys = Object.keys(datas[0]);
+
   const generateHeader = () => {
+    console.log(keys);
+    const handleSelectAll = () =>
+      document
+        .querySelectorAll('[name="isSelected"]')
+        .forEach(
+          (v) =>
+            (v.checked = document.querySelector(
+              '[name="isSelectedAll"'
+            ).checked)
+        );
     return (
       <thead>
         <tr>
-          <th></th>
-          <td>Name</td>
-          <td>Job</td>
-          <td>company</td>
-          <td>location</td>
-          <td>Last Login</td>
-          <td>Favorite Color</td>
+          <th>
+            <input
+              type="checkbox"
+              name="isSelectedAll"
+              className="checkbox checkbox-sm"
+              onChange={handleSelectAll}
+            />
+          </th>
+          {keys.map((v, i) => (
+            <td key={i}>{v}</td>
+          ))}
           <th></th>
         </tr>
       </thead>
     );
   };
+
   const generateContent = () => {
     const generateTableContent = () => {
-      let res = [];
-      for (let i = 0; i < 100; i++) {
-        res.push(
-          <tr>
-            <th>1</th>
-            <td>Cy Ganderton</td>
-            <td>Quality Control Specialist</td>
-            <td>Littel, Schaden and Vandervort</td>
-            <td>Canada</td>
-            <td>12/16/2020</td>
-            <td>Blue</td>
-            <th>1</th>
+      // let res = [];
+      return datas.map((v, i) => {
+        return (
+          <tr key={i}>
+            <th>
+              <input
+                type="checkbox"
+                name="isSelected"
+                className="checkbox checkbox-sm"
+                value={i}
+              />
+            </th>
+            {keys.map((v1) => {
+              if (typeof v[v1] == "boolean") {
+                return (
+                  <td>
+                    <input
+                      type="radio"
+                      defaultChecked
+                      className={
+                        v[v1] ? "radio radio-success" : "radio radio-error"
+                      }
+                    />
+                  </td>
+                );
+              } else {
+                return <td>{v[v1]}</td>;
+              }
+            })}
           </tr>
         );
-      }
-      return res;
+      });
     };
     return <tbody>{generateTableContent()}</tbody>;
   };
-  const generateFooter = () => {
-    return (
-      <tfoot>
-        <tr>
-          <th></th>
-          <td>Name</td>
-          <td>Job</td>
-          <td>company</td>
-          <td>location</td>
-          <td>Last Login</td>
-          <td>Favorite Color</td>
-          <th></th>
-        </tr>
-      </tfoot>
-    );
+
+  const handleInit = () => {
+    const res = [];
+    document
+      .querySelectorAll('input[name="isSelected"]:checked')
+      .forEach((v) => {
+        res.push(datas[v.value]);
+      });
+    isSelected = res;
+    console.log(isSelected)
   };
+
+  const handleCreate = () => {
+    handleInit();
+  };
+  const handleSubmit = () => {
+    handleInit();
+  };
+  const handleDelete = () => {
+    handleInit();
+  };
+
   return (
-    <div className="overflow-x-auto">
-      <table className="table table-xs table-pin-rows table-pin-cols">
-        {generateHeader()}
-        {generateContent()}
-        {generateFooter()}
-      </table>
+    <div className="flex flex-col h-full">
+      <div
+        className={"flex flex-row h-1/12 w-full items-center justify-between"}
+      >
+        <div className="pl-2">
+          <div className="btn btn-success mr-2" onClick={handleCreate}>
+            Create
+          </div>
+        </div>
+        <div>
+          <div className="btn btn-success mr-2" onClick={handleSubmit}>
+            Submit
+          </div>
+          <div className="btn btn-error mr-2" onClick={handleDelete}>
+            Delete
+          </div>
+        </div>
+      </div>
+      <div className="flex h-max-11/12 overflow-x-auto">
+        <table className="table table-xs table-pin-rows table-pin-cols">
+          {generateHeader()}
+          {generateContent()}
+        </table>
+      </div>
     </div>
   );
 };
