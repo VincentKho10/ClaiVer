@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import TableComponent from "../Components/TableComponent";
+import ModalComponent from "../Components/ModalComponent";
 
 let isSelected = [];
 const datasarr = [
@@ -124,6 +125,53 @@ const datasarr = [
     skills: ["Supply Chain", "Logistics", "Lean Six Sigma"],
   },
 ];
+const formfield = [
+          {
+            type: "text",
+            opt: false,
+            label: "Name",
+          },
+          {
+            type: "email",
+            opt: false,
+            label: "Email",
+          },
+          {
+            type: "number",
+            opt: false,
+            label: "Age",
+          },
+          {
+            type: "text",
+            opt: false,
+            label: "Company",
+          },
+          {
+            type: "text",
+            opt: false,
+            label: "Position",
+          },
+          {
+            type: "date",
+            opt: false,
+            label: "Start Date",
+          },
+          {
+            type: "currency",
+            opt: false,
+            label: "Salary",
+          }
+          // id: 1,
+          // name: "Jane Doe",
+          // email: "jane.doe@example.com",
+          // age: 28,
+          // status: "Submitted",
+          // company: "Tech Solutions Inc.",
+          // position: "Software Engineer",
+          // startDate: "2020-05-15",
+          // salary: 95000,
+          // skills: ["JavaScript", "React", "Node.js"],
+        ]
 let createlastid = datasarr.length;
 
 const HomeContentSection = () => {
@@ -155,28 +203,29 @@ const HomeContentSection = () => {
   };
 
   const handleCreate = () => {
-    datas.set(createlastid.toString(), {
-      id: createlastid,
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      age: 28,
-      status: "Created",
-      company: "Tech Solutions Inc.",
-      position: "Software Engineer",
-      startDate: "2020-05-15",
-      salary: 95000,
-      skills: ["JavaScript", "React", "Node.js"],
-    });
+    document.getElementById("CreateModal").showModal();
+    // datas.set(createlastid.toString(), {
+    //   id: createlastid,
+    //   name: "Jane Doe",
+    //   email: "jane.doe@example.com",
+    //   age: 28,
+    //   status: "Created",
+    //   company: "Tech Solutions Inc.",
+    //   position: "Software Engineer",
+    //   startDate: "2020-05-15",
+    //   salary: 95000,
+    //   skills: ["JavaScript", "React", "Node.js"],
+    // });
     setDatas(new Map(datas));
     createlastid++;
   };
 
   const handleSubmit = () => {
     const checked = handleInit();
-    checked.forEach((v,i) => {
-        datas.get(v.value).status = "Submitted"
-    })
-    setDatas(new Map(datas))
+    checked.forEach((v, i) => {
+      datas.get(v.value).status = "Submitted";
+    });
+    setDatas(new Map(datas));
   };
 
   const handleDelete = () => {
@@ -193,32 +242,38 @@ const HomeContentSection = () => {
   };
 
   return (
-    <div className={"flex flex-col justify-start p-8 h-11/12"}>
-      <div
-        className={"flex flex-row h-1/12 w-full items-center justify-between"}
-      >
-        <div className="pl-2">
-          <div className="btn btn-success mr-2" onClick={handleCreate}>
-            Create
+    <>
+      <div className={"flex flex-col justify-start p-8 h-11/12"}>
+        <div
+          className={"flex flex-row h-1/12 w-full items-center justify-between"}
+        >
+          <div className="pl-2">
+            <div className="btn btn-success mr-2" onClick={handleCreate}>
+              Create
+            </div>
+          </div>
+          <div>
+            <div className="btn btn-success mr-2" onClick={handleSubmit}>
+              Submit
+            </div>
+            <div className="btn btn-error mr-2" onClick={handleDelete}>
+              Delete
+            </div>
           </div>
         </div>
-        <div>
-          <div className="btn btn-success mr-2" onClick={handleSubmit}>
-            Submit
-          </div>
-          <div className="btn btn-error mr-2" onClick={handleDelete}>
-            Delete
-          </div>
+        <div className="flex h-11/12 justify-start overflow-x-auto">
+          {!keys ? (
+            <h1 className="align-middle">No Data ToBe Shown</h1>
+          ) : (
+            <TableComponent datas={datas} keys={keys} />
+          )}
         </div>
       </div>
-      <div className="flex h-11/12 justify-start overflow-x-auto">
-        {!keys ? (
-          <h1 className="align-middle">No Data ToBe Shown</h1>
-        ) : (
-          <TableComponent datas={datas} keys={keys} />
-        )}
-      </div>
-    </div>
+      <ModalComponent
+        id="CreateModal"
+        formField={formfield}
+      />
+    </>
   );
 };
 

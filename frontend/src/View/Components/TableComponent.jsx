@@ -64,6 +64,9 @@ const TableComponent = (props) => {
                 return <td>{v[v1]}</td>;
               }
             })}
+            <th>
+
+            </th>
           </tr>
         );
       }
