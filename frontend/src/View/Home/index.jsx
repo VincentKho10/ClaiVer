@@ -5,17 +5,10 @@ import ShowBarcode from "./ShowBarcode";
 import DrawerComponent from "../Components/DrawerComponent";
 import NavBarComponent from "../Components/NavBarComponent";
 import TableComponent from "../Components/TableComponent";
+import HomeContentSection from "./HomeContentSection";
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const HomeContentSection = () => {
-    return (
-      <div className={"p-8 h-11/12"}>
-        <TableComponent />
-      </div>
-    );
-  };
 
   return (
     <div className="flex flex-row h-full">

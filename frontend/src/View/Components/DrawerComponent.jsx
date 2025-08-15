@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 const DrawerComponent = (props) => {
   const {isOpen} = props
-  console.log(isOpen)
 
   return (
     <div className={"flex flex-row drawer "+(isOpen?"lg:drawer-open":"lg:drawer-close")}>
