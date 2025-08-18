@@ -125,53 +125,8 @@ const datasarr = [
     skills: ["Supply Chain", "Logistics", "Lean Six Sigma"],
   },
 ];
-const formfield = [
-          {
-            type: "text",
-            opt: false,
-            label: "Name",
-          },
-          {
-            type: "email",
-            opt: false,
-            label: "Email",
-          },
-          {
-            type: "number",
-            opt: false,
-            label: "Age",
-          },
-          {
-            type: "text",
-            opt: false,
-            label: "Company",
-          },
-          {
-            type: "text",
-            opt: false,
-            label: "Position",
-          },
-          {
-            type: "date",
-            opt: false,
-            label: "Start Date",
-          },
-          {
-            type: "currency",
-            opt: false,
-            label: "Salary",
-          }
-          // id: 1,
-          // name: "Jane Doe",
-          // email: "jane.doe@example.com",
-          // age: 28,
-          // status: "Submitted",
-          // company: "Tech Solutions Inc.",
-          // position: "Software Engineer",
-          // startDate: "2020-05-15",
-          // salary: 95000,
-          // skills: ["JavaScript", "React", "Node.js"],
-        ]
+const formfield = []
+
 let createlastid = datasarr.length;
 
 const HomeContentSection = () => {
@@ -216,6 +171,7 @@ const HomeContentSection = () => {
     //   salary: 95000,
     //   skills: ["JavaScript", "React", "Node.js"],
     // });
+    console.log("created")
     setDatas(new Map(datas));
     createlastid++;
   };
@@ -272,6 +228,8 @@ const HomeContentSection = () => {
       <ModalComponent
         id="CreateModal"
         formField={formfield}
+        datasState={[datas, setDatas]}
+        title="Create Barcode"
       />
     </>
   );

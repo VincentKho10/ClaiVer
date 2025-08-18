@@ -6,6 +6,7 @@ import DrawerComponent from "../Components/DrawerComponent";
 import NavBarComponent from "../Components/NavBarComponent";
 import TableComponent from "../Components/TableComponent";
 import HomeContentSection from "./HomeContentSection";
+import MenuComponent from "../Components/MenuComponent";
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +14,7 @@ const Home = () => {
   return (
     <div className="flex flex-row h-full">
       <div className={"w-auto flex"}>
-        <DrawerComponent isOpen={isOpen} />
+        <DrawerComponent isOpen={isOpen} menus={()=><MenuComponent />}/>
       </div>
       <div className="flex flex-col w-full h-full">
         <div className="h-1/12">

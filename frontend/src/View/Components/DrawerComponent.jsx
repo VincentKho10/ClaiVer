@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const DrawerComponent = (props) => {
-  const {isOpen} = props
+  const {isOpen, menus} = props
 
   return (
     <div className={"flex flex-row drawer "+(isOpen?"lg:drawer-open":"lg:drawer-close")}>
@@ -14,12 +14,7 @@ const DrawerComponent = (props) => {
         ></label>
         <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
           {/* Sidebar content here */}
-          <li>
-            <a>Generate Barcode</a>
-          </li>
-          <li>
-            <a>Show Barcode</a>
-          </li>
+          {menus()}
         </ul>
       </div>
     </div>
