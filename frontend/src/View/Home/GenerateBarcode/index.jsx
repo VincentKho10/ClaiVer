@@ -12,6 +12,7 @@ const GenerateBarcode = (props) => {
     //   "DN Count": 4,
     //   data: ["2025/07/0255", "2025/07/0253", "2025/07/0256", "2025/07/0257"],
     // },
+
   });
   const [delivr, setDelivr] = useState({ send_date: "", DNID: "" });
 
@@ -241,6 +242,7 @@ const GenerateBarcode = (props) => {
       {isUpdate == -1 ? (
         <div className="flex flex-row justify-end h-1/12">
           <button
+            type="submit"
             className="btn btn-primary mr-4 h-full"
             onClick={handleSubmit}
           >

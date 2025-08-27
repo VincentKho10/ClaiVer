@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TableComponent from "../Components/TableComponent";
 import ModalComponent from "../Components/ModalComponent";
+import StockMasukModal from "./Gudang/StockMasukModal";
 
 let isSelected = [];
 const datasarr = [
@@ -125,7 +126,19 @@ const datasarr = [
     skills: ["Supply Chain", "Logistics", "Lean Six Sigma"],
   },
 ];
-const formfield = []
+
+// {
+//     id: 1,
+//     name: "Jane Doe",
+//     email: "jane.doe@example.com",
+//     age: 28,
+//     status: "Submitted",
+//     company: "Tech Solutions Inc.",
+//     position: "Software Engineer",
+//     startDate: "2020-05-15",
+//     salary: 95000,
+//     skills: ["JavaScript", "React", "Node.js"],
+// },
 
 let createlastid = datasarr.length;
 
@@ -158,7 +171,7 @@ const HomeContentSection = () => {
   };
 
   const handleCreate = () => {
-    document.getElementById("CreateModal").showModal();
+    document.getElementById("stok_masuk_create").showModal();
     // datas.set(createlastid.toString(), {
     //   id: createlastid,
     //   name: "Jane Doe",
@@ -171,7 +184,7 @@ const HomeContentSection = () => {
     //   salary: 95000,
     //   skills: ["JavaScript", "React", "Node.js"],
     // });
-    console.log("created")
+
     setDatas(new Map(datas));
     createlastid++;
   };
@@ -225,11 +238,21 @@ const HomeContentSection = () => {
           )}
         </div>
       </div>
-      <ModalComponent
-        id="CreateModal"
-        formField={formfield}
+      <StockMasukModal
         datasState={[datas, setDatas]}
-        title="Create Barcode"
+        createlastid={createlastid}
+        initmodal={{
+          id: [createlastid, "number"],
+          goods_name: ["", "text"],
+          quantity: ["", "text"],
+          description: [18, "number"],
+          package: ["Created", "text"],
+          company: ["", "text"],
+          position: ["", "select"],
+          startDate: ["", "date"],
+          salary: ["", "number"],
+          skills: ["", "text"],
+        }}
       />
     </>
   );

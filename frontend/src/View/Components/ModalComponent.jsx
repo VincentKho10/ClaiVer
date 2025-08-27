@@ -1,7 +1,7 @@
 import React from "react";
 
 function ModalComponent(props) {
-  const { id, formField, title } = props;
+  const { id, formField, title, handleCreate } = props;
 
   return (
     <>
@@ -14,7 +14,7 @@ function ModalComponent(props) {
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
-              <button className="btn">Create</button>
+              <button onClick={handleCreate} className="btn">Create</button>
               <button className="btn ml-2">Cancel</button>
             </form>
           </div>
