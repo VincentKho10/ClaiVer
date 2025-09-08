@@ -5,12 +5,14 @@ const { showController } = require("../controllers/barcode/show.controller");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.json({ message: "barcode home page" });
+router.get("/", (req, res, next) => {
+  try {
+    res.json({ message: "barcode home page" });
+    throw new Error("internal server error");
+  } catch (error) {
+    next(error)
+  }
 });
-
-
-
 
 router.post("/generate", generateController);
 

@@ -24,7 +24,7 @@ const stockSchema = new mongoose.Schema(
             default: []
         },
         Delivery: {
-            type: [{ type: Schema.Types.ObjectId, ref: 'Delivery'}],
+            type: [{ type: Schema.Types.ObjectId, ref: 'DeliveryModel'}],
             required: false,
             default: []
         }

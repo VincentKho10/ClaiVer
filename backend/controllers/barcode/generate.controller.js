@@ -3,7 +3,7 @@ const { hashData } = require("../../util/hashingalg");
 const BarcodeModel = require("../../models/barcode/barcode.model");
 const {generateQr} = require("../../util/generateqr");
 
-const generateController = async (req, res) => {
+const generateController = async (req, res, next) => {
   try {
     const { send_date, DNID } = req.body;
     // send_date: {
@@ -30,7 +30,7 @@ const generateController = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error)
+    next(error)
   }
 };
 
