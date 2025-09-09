@@ -16,7 +16,8 @@ app.use("/barcode", barcodeRoute);
 app.use("/delivery", deliveryRoute);
 
 app.use((err,req,res,next)=>{
-  console.error(err.statusMessage)
+  res.status(500).json({ message: "Internal Server Error" })
+  console.error(err)
 })
 
 app.listen(port, hostname, () => {

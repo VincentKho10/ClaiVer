@@ -8,7 +8,14 @@ const router = express.Router();
 router.get("/", (req, res, next) => {
   try {
     res.json({ message: "barcode home page" });
-    throw new Error("internal server error");
+  } catch (error) {
+    next(error)
+  }
+});
+
+router.get("/:id", (req, res, next) => {
+  try {
+    return
   } catch (error) {
     next(error)
   }
