@@ -6,9 +6,9 @@ router.get("/", (req, res) =>
   res.json({ message: "Hello This Is Delivery Route" })
 );
 
-router.post("/", async (req, res, next)=>{
+router.get("/:id", async (req, res, next)=>{
   try {
-    
+    throw new Error('error message')
   } catch (error) {
     next(error)
   }
