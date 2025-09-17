@@ -43,4 +43,4 @@ deliverItemSchema.virtual('total_amount').get(()=>{
     return unit*qty
 })
 
-module.exports = mongoose.model("ItemModel", deliverItemSchema);
+module.exports = mongoose.model("DeliverItemModel", deliverItemSchema);
