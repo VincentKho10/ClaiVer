@@ -1,11 +1,11 @@
-import express from "express";
-import mongoose from "mongoose";
+const express = require("express");
+const mongoose = require("mongoose");
 
 const deliverStatusSchema = new mongoose.Schema(
   {
     status: {
-      type: [String],
-      default: ["Request", "Deliver", "Invoice", "Payment"],
+      type: String,
+      required: true
     },
   }
 );

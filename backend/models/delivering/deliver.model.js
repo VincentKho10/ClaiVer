@@ -9,12 +9,12 @@ const deliverSchema = new mongoose.Schema({
   },
   delivery_date: {
     type: Date,
-    default: 0,
+    default: mongoose.now(),
     required: true,
   },
   request_date: {
     type: Date,
-    default: 0,
+    default: mongoose.now(),
     required: true,
   },
   POID: {
@@ -29,7 +29,7 @@ const deliverSchema = new mongoose.Schema({
         ref: "ItemModel",
       },
     ],
-    default: "",
+    default: [],
     required: true,
   },
   status: {

@@ -1,0 +1,39 @@
+GET http://localhost:3000/delivery/item HTTP/1.1
+
+###
+GET http://localhost:3000/delivery/item/68ca61dcd797c6b33a4310a1 HTTP/1.1
+
+###
+
+POST http://localhost:3000/delivery/item HTTP/1.1
+Content-Type: application/json
+
+{
+    "part_no":"testnew",
+    "name":"test",
+    "qty":4,
+    "unit":"PCS",
+    "unit_price":4,
+    "tax":4,
+    "description":"test"
+}
+
+###
+
+PUT http://localhost:3000/delivery/item/68d372f9b7541de599124a9c HTTP/1.1
+Content-Type: application/json
+
+{
+    "part_no":"testeasernas",
+    "name":"test",
+    "qty":4,
+    "unit":"PCS",
+    "unit_price":4,
+    "tax":4,
+    "description":"test"
+}
+
+###
+
+DELETE http://localhost:3000/delivery/item/68d376f6e79b44bbfb800fc6+68d3739d125c19077a6cf4a2 HTTP/1.1
+Content-Type: application/json

@@ -1,0 +1,38 @@
+GET http://localhost:3000/delivery HTTP/1.1
+
+###
+
+GET http://localhost:3000/delivery/10/1 HTTP/1.1
+
+###
+
+GET http://localhost:3000/delivery/68d3538a5db6f5ba3678e584 HTTP/1.1
+
+###
+
+POST http://localhost:3000/delivery HTTP/1.1
+Content-Type: application/json
+
+{
+    "delivery_no": "test123",
+    "POID": "123123",
+    "from_address": "test",
+    "to_address": "test"
+}
+
+###
+
+PUT http://localhost:3000/delivery/68d377fc4aee60824ed66210 HTTP/1.1
+Content-Type: application/json
+
+{
+    "delivery_no": "test1232",
+    "POID": "1231232",
+    "from_address": "test2",
+    "to_address": "test2"
+}
+
+
+###
+
+DELETE http://localhost:3000/delivery/68d377fb4aee60824ed6620a HTTP/1.1
