@@ -1,9 +1,9 @@
-const deliverModel = require("../../../models/delivery/deliver.model");
+const DeliveringModel = require("../../../models/delivery/delivering.model");
 const { Logger } = require("../../../util/logger");
 
-const getAllDeliverController = async (req, res, next) => {
+const getAllDeliveringController = async (req, res, next) => {
     try {
-        const ret = await deliverModel.find({});
+        const ret = await DeliveringModel.find({});
         
         if (!ret.length) {
             return res.status(400).json({ message: "nothing to show" })
@@ -15,27 +15,27 @@ const getAllDeliverController = async (req, res, next) => {
     }
 }
 
-const getAllPagedDeliverController = async (req,res,next)=>{
+const getAllPagedDeliveringController = async (req,res,next)=>{
     try {
         const page = req.params.page;
         const pages = req.params.pages;
 
-        const found = await deliverModel.find({}).skip((page-1)*pages).limit(pages);
+        const found = await DeliveringModel.find({}).skip((page-1)*pages).limit(pages);
 
         if(!found.length){
             return res.status(400).json({ message: "nothing to show"})
         }
-        
+
         res.status(200).json(found);
     } catch (error) {
         next(error)
     }
 }
 
-const getDeliverController = async (req, res, next) => {
+const getDeliveringController = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const ret = await deliverModel.find({_id: id});
+        const ret = await DeliveringModel.findById(id);
         if (!ret) {
             return res.status(400).json({ message: "id not found" })
         }
@@ -45,10 +45,10 @@ const getDeliverController = async (req, res, next) => {
     }
 }
 
-const createDeliverController = async (req, res, next) => {
+const createDeliveringController = async (req, res, next) => {
     try {
         const body = req.body;
-        const dm = await deliverModel.create(body);
+        const dm = await DeliveringModel.create(body);
         const ret = await dm.save();
         res.status(200).json({ message: "Created Successfully", data: ret });
     } catch (error) {
@@ -56,11 +56,11 @@ const createDeliverController = async (req, res, next) => {
     }
 }
 
-const updateDeliverController = async (req, res, next) => {
+const updateDeliveringController = async (req, res, next) => {
     try {
         const id = req.params.id
         const body = req.body
-        const dmid = await deliverModel.findByIdAndUpdate(id, body)
+        const dmid = await DeliveringModel.findByIdAndUpdate(id, body)
 
         if (!dmid) {
             return res.status(400).json({ message: "not found" })
@@ -72,11 +72,11 @@ const updateDeliverController = async (req, res, next) => {
     }
 }
 
-const deleteDeliverController = async (req, res, next) => {
+const deleteDeliveringController = async (req, res, next) => {
     try {
         const params = req.params.ids.split("+")
         let ret = await Promise.all(params.map(async element => {
-            const dmid = await deliverModel.deleteMany({ _id: element })
+            const dmid = await DeliveringModel.deleteMany({ _id: element })
             if (dmid.deletedCount > 0) {
                 logger = Logger("DeleteLog/DeleteDeliver", "del")
                 logger.info(`${element} was deleted`)
@@ -100,10 +100,10 @@ const deleteDeliverController = async (req, res, next) => {
 }
 
 module.exports = {
-    getAllDeliverController,
-    getAllPagedDeliverController,
-    getDeliverController,
-    createDeliverController,
-    updateDeliverController,
-    deleteDeliverController,
+    getAllDeliveringController,
+    getAllPagedDeliveringController,
+    getDeliveringController,
+    createDeliveringController,
+    updateDeliveringController,
+    deleteDeliveringController,
 }

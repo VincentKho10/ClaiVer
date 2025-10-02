@@ -1,7 +1,8 @@
-const express = require("express");
-const mongoose = require("mongoose");
 const Valkey = require("iovalkey");
-const { ErrorHandlerSystem } = require("../../../util/errorhandler");
+const ErrorHandler = require("../../../util/errorhandler");
+const { Logger } = require("../../../util/logger");
+
+const logger = Logger("ErrLogSys/Db", "valkey")
 
 const valkeyClient = new Valkey({
   password: process.env.DEV_VALKEY_SECRET,
@@ -11,15 +12,16 @@ const valkeyClient = new Valkey({
 
 valkeyClient.on("connect", () => console.log("valkey connected"));
 
-valkeyClient.on("error", (err) =>
-  ErrorHandlerSystem(`error during connecting to valkey ${err}`)
+valkeyClient.on("error", (error) =>
+  logger.error(error)
 );
 
-const initValkey = async () => {
+const initValkey = async (req,res,next) => {
   try {
     await valkeyClient.connect();
+    console.log('Valkey Connected')
   } catch (error) {
-    ErrorHandlerSystem("Attempting connection failed", error);
+    logger.error(error)
   }
 };
 

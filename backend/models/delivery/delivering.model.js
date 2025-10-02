@@ -1,26 +1,21 @@
-const express = require("express");
 const mongoose = require("mongoose");
 
-const deliverSchema = new mongoose.Schema({
+const deliveringSchema = new mongoose.Schema({
   delivery_no: {
     type: String,
     default: "",
     required: true,
+    unique: true,
+    index: true
   },
   delivery_date: {
     type: Date,
     default: mongoose.now(),
     required: true,
   },
-  request_date: {
-    type: Date,
-    default: mongoose.now(),
-    required: true,
-  },
   POID: {
-    type: String,
-    default: "",
-    required: true,
+    type: mongoose.Schema.ObjectId,
+    unique: false,
   },
   Goods: {
     type: [
@@ -31,10 +26,6 @@ const deliverSchema = new mongoose.Schema({
     ],
     default: [],
     required: true,
-  },
-  status: {
-    type: String,
-    default: "Request",
   },
   from_address: {
     type: String,
@@ -48,4 +39,4 @@ const deliverSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("DeliveryModel", deliverSchema);
+module.exports = mongoose.model("DeliveringModel", deliveringSchema);

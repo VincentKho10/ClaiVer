@@ -1,4 +1,4 @@
-const DeliverItemModel = require("../../../models/delivering/deliver_item.model");
+const DeliverItemModel = require("../../../models/delivery/deliver_item.model");
 const { Logger } = require("../../../util/logger");
 
 const createDeliverItemController = async (req, res, next) => {
@@ -83,9 +83,9 @@ const deleteDeliverItemController = async (req, res, next) => {
 }
 
 module.exports = {
-  createDeliverItemController,
-  updateDeliverItemController,
   getDeliverItemController,
   getAllDeliverItemController,
+  createDeliverItemController,
+  updateDeliverItemController,
   deleteDeliverItemController,
 };

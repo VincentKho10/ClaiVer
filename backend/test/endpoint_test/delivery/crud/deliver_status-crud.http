@@ -1,0 +1,27 @@
+GET http://localhost:3000/delivery/status/ HTTP/1.1
+
+###
+
+GET http://localhost:3000/delivery/status/1 HTTP/1.1
+
+###
+
+POST http://localhost:3000/delivery/status/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "status": "test"
+}
+
+###
+
+PUT http://localhost:3000/delivery/status/68d482e09ff92b31d5a56667 HTTP/1.1
+Content-Type: application/json
+
+{
+    "status": "Invoicing"
+}
+
+###
+
+DELETE http://localhost:3000/delivery/status/68d49412cad92cf0637e7cd8+68d49434cad92cf0637e7ce7+68d49412cad92cf0637e7cdc HTTP/1.1
