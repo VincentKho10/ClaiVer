@@ -1,4 +1,5 @@
 const express = require("express");
+
 const {
   createDeliverItemController,
   updateDeliverItemController,
@@ -34,30 +35,30 @@ const {
 } = require("../controllers/crud/deliver/po-crud.controller")
 
 const {
-    getAllDeliverInvoiceController,
-    getAllPagedDeliverInvoiceController,
-    getDeliverInvoiceController,
-    createDeliverInvoiceController,
-    updateDeliverInvoiceController,
-    deleteDeliverInvoiceController,
+  getAllDeliverInvoiceController,
+  getAllPagedDeliverInvoiceController,
+  getDeliverInvoiceController,
+  createDeliverInvoiceController,
+  updateDeliverInvoiceController,
+  deleteDeliverInvoiceController,
 } = require("../controllers/crud/deliver/invoice-crud.controller")
 
 const {
-    getAllDeliveringController,
-    getAllPagedDeliveringController,
-    getDeliveringController,
-    createDeliveringController,
-    updateDeliveringController,
-    deleteDeliveringController,
+  getAllDeliveringController,
+  getAllPagedDeliveringController,
+  getDeliveringController,
+  createDeliveringController,
+  updateDeliveringController,
+  deleteDeliveringController,
 } = require("../controllers/crud/deliver/delivering-crud.controller")
 
 const router = express.Router();
 
-router.get("/item/", getAllDeliverItemController);
-router.get("/item/:id", getDeliverItemController);
-router.post("/item/", createDeliverItemController);
-router.put("/item/:id", updateDeliverItemController);
-router.delete("/item/:ids", deleteDeliverItemController);
+router.get("/item/", getAllDeliverItemController)
+router.get("/item/:id", getDeliverItemController)
+router.post("/item/", createDeliverItemController)
+router.put("/item/:id", updateDeliverItemController)
+router.delete("/item/:ids", deleteDeliverItemController)
 
 router.get("/base", getAllDeliverController)
 router.get('/base/paged/:pages/:page', getAllPagedDeliverController)

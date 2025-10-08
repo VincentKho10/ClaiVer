@@ -2,7 +2,7 @@ GET http://localhost:3000/delivery/base/ HTTP/1.1
 
 ###
 
-GET http://localhost:3000/delivery/base/1 HTTP/1.1
+GET http://localhost:3000/delivery/base/68e362f28124db413fb5e96e HTTP/1.1
 
 ###
 
@@ -10,18 +10,24 @@ POST http://localhost:3000/delivery/base/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "test": "test"
+    "DeliveryPO": "68d5f654908f41ac12f2746a",
+    "DeliverStatus": "68d482c69ff92b31d5a56665",
+    "from_address": "test",
+    "to_address": "test"
 }
 
 ###
 
-PUT http://localhost:3000/delivery/base/68d482e09ff92b31d5a56667 HTTP/1.1
+PUT http://localhost:3000/delivery/base/68e3629d8124db413fb5e95d HTTP/1.1
 Content-Type: application/json
 
 {
-    "status": "Invoicing"
+    "DeliveryPO": "68d5f654908f41ac12f2746a",
+    "DeliverStatus": "68d482e09ff92b31d5a56667",
+    "from_address": "test",
+    "to_address": "test"
 }
 
 ###
 
-DELETE http://localhost:3000/delivery/base/68d49412cad92cf0637e7cd8+68d49434cad92cf0637e7ce7+68d49412cad92cf0637e7cdc HTTP/1.1
+DELETE http://localhost:3000/delivery/base/68e362de8124db413fb5e968 HTTP/1.1

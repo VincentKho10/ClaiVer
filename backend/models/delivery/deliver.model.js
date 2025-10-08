@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const deliverSchema = new mongoose.Schema({
-  Deliver: {
-    type: mongoose.Schema.ObjectId,
-    default: "DeliverModel",
-    required: false,
-  },
   DeliveryPO: {
     type: mongoose.Schema.ObjectId,
     default: "PurchaseOrderModel",
@@ -15,6 +10,15 @@ const deliverSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: "DeliverInvoiceModel",
     required: false,
+  },
+  Delivering:{
+    type: mongoose.Schema.ObjectId,
+    ref: "DeliverModel",
+    required: false,
+  },
+  DeliverStatus: {
+    type: mongoose.Schema.ObjectId,
+    required: true,
   },
   from_address: {
     type: String,
